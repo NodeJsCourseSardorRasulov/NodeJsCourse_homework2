@@ -1,1 +1,1 @@
-export * from "./userSchema.js";
+export * from './userSchema.js';
