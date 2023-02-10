@@ -21,9 +21,6 @@
   },
   "homepage": "https://github.com/NodeJsCourseSardorRasulov/NodeJsCourse_homework2#readme",
   "devDependencies": {
-    "@babel/core": "^7.20.12",
-    "@babel/node": "^7.20.7",
-    "@babel/preset-env": "^7.20.2",
     "eslint": "^8.32.0",
     "nodemon": "^2.0.20"
   },
