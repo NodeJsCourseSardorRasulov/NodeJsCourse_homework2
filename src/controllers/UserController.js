@@ -1,4 +1,4 @@
-import { useMiddlewareValidator } from '../validation/index.js';
+import { userMiddlewareValidator } from '../validation/index.js';
 import { UserService } from '../services/index.js';
 import { UserModel } from '../models/index.js';
 import { routesConfig } from '../configs/index.js';
@@ -17,7 +17,7 @@ export const UserController = app => {
     res.status(200).send(users);
   });
 
-  app.post(`${userRoutesPathname}/`, useMiddlewareValidator, async (req, res) => {
+  app.post(`${userRoutesPathname}/`, userMiddlewareValidator, async (req, res) => {
     const user = req.body;
 
     const newUser = await userService.create(user);
@@ -25,7 +25,7 @@ export const UserController = app => {
     res.status(201).send(newUser);
   });
 
-  app.put(`${userRoutesPathname}/userId`, async (req, res) => {
+  app.put(`${userRoutesPathname}/userId`, userMiddlewareValidator, async (req, res) => {
     const { userId } = req.params;
     const updatingUser = req.body;
 

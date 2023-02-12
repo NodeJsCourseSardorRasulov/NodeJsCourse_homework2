@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
 
-export default class UserService {
+export class UserService {
   constructor(userModel) {
     this.userModel = userModel;
   }
