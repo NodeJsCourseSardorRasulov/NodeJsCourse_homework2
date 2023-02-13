@@ -5,8 +5,7 @@ import { routesConfig } from '../configs/index.js';
 
 const { userRoutesPathname } = routesConfig;
 
-const userModel = new UserModel();
-const userService = new UserService(userModel);
+const userService = new UserService(UserModel);
 
 export const UserController = app => {
   app.get(`${userRoutesPathname}/:loginSubstring?/:limit?`, async (req, res) => {
@@ -25,24 +24,20 @@ export const UserController = app => {
     res.status(201).send(newUser);
   });
 
-  app.put(`${userRoutesPathname}/userId`, userMiddlewareValidator, async (req, res) => {
+  app.put(`${userRoutesPathname}/:userId`, userMiddlewareValidator, async (req, res) => {
     const { userId } = req.params;
     const updatingUser = req.body;
 
-    const updatedUser = await userService.update(updatingUser, userId);
+    await userService.update(updatingUser, userId);
 
-    res.status(201).send(updatedUser);
+    res.status(201).send('User updated');
   });
 
-  app.delete(`${userRoutesPathname}/userId`, async (req, res) => {
+  app.delete(`${userRoutesPathname}/:userId`, async (req, res) => {
     const { userId } = req.params;
 
-    const result = await userService.softDelete(userId);
+    await userService.softDelete(userId);
 
-    if (result) {
-      res.status(200).send('File deleted');
-    } else {
-      res.status(400).end();
-    }
+    res.status(200).send('User deleted');
   });
 };

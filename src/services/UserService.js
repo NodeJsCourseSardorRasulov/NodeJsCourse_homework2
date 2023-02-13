@@ -8,9 +8,8 @@ export class UserService {
   async getAll(loginSubstring, limit) {
     const users = await this.userModel.findAll({
       where: {
-        isDeleted: false,
         login: {
-          [Op.startsWith]: loginSubstring
+          [Op.startsWith]: loginSubstring || ''
         }
       },
       order: [
@@ -29,13 +28,13 @@ export class UserService {
   }
 
   async update(user, userId) {
-    const updatedUser = await this.userModel.update(user, {
+    const result = await this.userModel.update(user, {
       where: {
         id: userId
       }
     });
 
-    return updatedUser;
+    return result;
   }
 
   async softDelete(userId) {
