@@ -1,4 +1,4 @@
-import { userMiddlewareValidator } from '../validation/index.js';
+import { groupMiddlewareValidator } from '../validation/index.js';
 import { GroupService } from '../services/index.js';
 import { GroupModel } from '../models/index.js';
 import { routesConfig } from '../configs/index.js';
@@ -16,7 +16,7 @@ export const GroupController = app => {
     res.status(200).send(groups);
   });
 
-  app.post(`${groupsRoutesPathname}/`, userMiddlewareValidator, async (req, res) => {
+  app.post(`${groupsRoutesPathname}/`, groupMiddlewareValidator, async (req, res) => {
     const group = req.body;
 
     const newGroup = await groupService.create(group);
@@ -24,7 +24,7 @@ export const GroupController = app => {
     res.status(201).send(newGroup);
   });
 
-  app.put(`${groupsRoutesPathname}/:groupId`, userMiddlewareValidator, async (req, res) => {
+  app.put(`${groupsRoutesPathname}/:groupId`, groupMiddlewareValidator, async (req, res) => {
     const { groupId } = req.params;
     const updatingGroup = req.body;
 
