@@ -2,11 +2,12 @@ import { DataTypes } from 'sequelize';
 
 import { groupPermissions } from '../configs/groupPermissions.js';
 import { sequelize } from './sequelizeConnected.js';
+import { UserModel } from './UserModel.js';
 
-export const GroupModel = sequelize.define('', {
+export const GroupModel = sequelize.define('Group', {
   id: {
     type: DataTypes.UUID,
-    defaultVaue: DataTypes.UUIDV4,
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
   name: {
@@ -14,6 +15,15 @@ export const GroupModel = sequelize.define('', {
     allowNull: false
   },
   permissions: {
-    type: DataTypes.ENUM(groupPermissions)
+    type: DataTypes.ENUM(groupPermissions),
+    allowNull: false
+  },
+  createdAt: {
+    type: DataTypes.DATE
+  },
+  updatedAt: {
+    type: DataTypes.DATE
   }
 });
+
+GroupModel.belongsToMany(UserModel, { through: 'UserGroups' });
