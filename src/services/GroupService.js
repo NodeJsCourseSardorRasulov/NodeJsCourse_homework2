@@ -1,6 +1,9 @@
+import { sequelize } from '../models/index.js';
+
 export class GroupService {
-  constructor(groupModel) {
+  constructor(groupModel, userModel) {
     this.groupModel = groupModel;
+    this.userModel = userModel;
   }
 
   async getAll(limit) {
@@ -33,5 +36,41 @@ export class GroupService {
     });
 
     return res;
+  }
+
+  // async addUserToGroups(t) {
+  //   const group = await this.groupModel.findByPk(groupId, {
+  //     transaction: t
+  //   });
+
+  //   const user = await this.userModel.findByPk(userId, {
+  //     transaction: t
+  //   });
+
+  //   return group.addUser(user, { transaction: t });
+  // }
+
+  async addUsersToGroup(groupId, userId) {
+    async function cb(t) {
+      const group = await this.groupModel.findByPk(groupId, {
+        transaction: t
+      });
+
+      const user = await this.userModel.findByPk(userId, {
+        transaction: t
+      });
+
+      return group.addUser(user, { transaction: t });
+    }
+
+    const cbWithContextBound = cb.bind(this);
+
+    try {
+      const res = await sequelize.transaction(cbWithContextBound);
+
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
