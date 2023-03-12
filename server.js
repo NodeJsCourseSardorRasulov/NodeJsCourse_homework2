@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import { v4 as uuidv4 } from "uuid"
 
 import { getAutoSuggestUsers } from "./src/utils/index.js";
+import { userMiddlewareValidator } from "./src/validation/index.js";
 
 const app = express();
 const port = 3000;
@@ -10,8 +11,8 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Server is launched on port ${port}`)
 });
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 
 const users = [
   {
@@ -31,7 +32,7 @@ app.get("/users/:loginSubstring?/:limit?", (req, res) => {
   res.status(200).send(filteredAndSortedUsers);
 });
 
-app.post("/users", (req, res) => {
+app.post("/users", userMiddlewareValidator, (req, res) => {
   const user = req.body;
   const newUser = {
     ...user,
@@ -43,7 +44,7 @@ app.post("/users", (req, res) => {
   res.status(201).send(newUser);
 });
 
-app.put("/users/:userId", (req, res) => {
+app.put("/users/:userId", userMiddlewareValidator, (req, res) => {
   const { userId } = req.params;
   const updatedUser = req.body;
   const updatingUserPosition = users.findIndex(({ id }) => id === userId);
