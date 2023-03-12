@@ -38,18 +38,6 @@ export class GroupService {
     return res;
   }
 
-  // async addUserToGroups(t) {
-  //   const group = await this.groupModel.findByPk(groupId, {
-  //     transaction: t
-  //   });
-
-  //   const user = await this.userModel.findByPk(userId, {
-  //     transaction: t
-  //   });
-
-  //   return group.addUser(user, { transaction: t });
-  // }
-
   async addUsersToGroup(groupId, userId) {
     async function cb(t) {
       const group = await this.groupModel.findByPk(groupId, {
