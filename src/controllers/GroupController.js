@@ -1,14 +1,16 @@
 import { groupMiddlewareValidator } from '../validation/index.js';
 import { GroupService } from '../services/index.js';
-import { GroupModel } from '../models/index.js';
+import { GroupModel, UserModel } from '../models/index.js';
 import { routesConfig } from '../configs/index.js';
+import { groupPermMiddleware } from '../middlewares/index.js';
 
-const { groupsRoutesPathname } = routesConfig;
+const { groupRoutesPathname } = routesConfig;
 
-const groupService = new GroupService(GroupModel);
+const groupService = new GroupService(GroupModel, UserModel);
+const groupMiddlewares = [groupMiddlewareValidator, groupPermMiddleware];
 
 export const GroupController = app => {
-  app.get(`${groupsRoutesPathname}/:limit?`, async (req, res) => {
+  app.get(`${groupRoutesPathname}/:limit?`, async (req, res) => {
     const { limit } = req.params || {};
 
     const groups = await groupService.getAll(limit);
@@ -16,7 +18,19 @@ export const GroupController = app => {
     res.status(200).send(groups);
   });
 
-  app.post(`${groupsRoutesPathname}/`, groupMiddlewareValidator, async (req, res) => {
+  app.post(`${groupRoutesPathname}/addUserToGroup`, async (req, res) => {
+    const { groupId, userId } = req.body;
+
+    const result = await groupService.addUsersToGroup(groupId, userId);
+
+    if (result) {
+      res.status(200).send('User successfully added to group');
+    } else {
+      res.send('User wasn\'t added to a group');
+    }
+  });
+
+  app.post(`${groupRoutesPathname}/`, ...groupMiddlewares, async (req, res) => {
     const group = req.body;
 
     const newGroup = await groupService.create(group);
@@ -24,7 +38,7 @@ export const GroupController = app => {
     res.status(201).send(newGroup);
   });
 
-  app.put(`${groupsRoutesPathname}/:groupId`, groupMiddlewareValidator, async (req, res) => {
+  app.put(`${groupRoutesPathname}/:groupId`, ...groupMiddlewares, async (req, res) => {
     const { groupId } = req.params;
     const updatingGroup = req.body;
 
@@ -33,7 +47,7 @@ export const GroupController = app => {
     res.status(201).send('Group updated');
   });
 
-  app.delete(`${groupsRoutesPathname}/:groupId`, async (req, res) => {
+  app.delete(`${groupRoutesPathname}/:groupId`, async (req, res) => {
     const { groupId } = req.params;
 
     await groupService.hardDelete(groupId);
