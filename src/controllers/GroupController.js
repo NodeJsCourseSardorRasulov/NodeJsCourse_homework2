@@ -3,6 +3,7 @@ import { GroupService } from '../services/index.js';
 import { GroupModel, UserModel } from '../models/index.js';
 import { routesConfig } from '../configs/index.js';
 import { groupPermMiddleware } from '../middlewares/index.js';
+import { attachServiceInfoToResponse } from '../helpers/index.js';
 
 const { groupRoutesPathname } = routesConfig;
 
@@ -15,6 +16,7 @@ export const GroupController = app => {
 
     const groups = await groupService.getAll(limit);
 
+    attachServiceInfoToResponse(res, GroupService, groupService.getAll, [limit]);
     res.status(200).send(groups);
   });
 
@@ -22,6 +24,8 @@ export const GroupController = app => {
     const { groupId, userId } = req.body;
 
     const result = await groupService.addUsersToGroup(groupId, userId);
+
+    attachServiceInfoToResponse(res, GroupService, groupService.addUsersToGroup, [groupId, userId]);
 
     if (result) {
       res.status(200).send('User successfully added to group');
@@ -35,6 +39,7 @@ export const GroupController = app => {
 
     const newGroup = await groupService.create(group);
 
+    attachServiceInfoToResponse(res, GroupService, groupService.create, [group]);
     res.status(201).send(newGroup);
   });
 
@@ -44,6 +49,7 @@ export const GroupController = app => {
 
     await groupService.update(updatingGroup, groupId);
 
+    attachServiceInfoToResponse(res, GroupService, groupService.update, [updatingGroup, groupId]);
     res.status(201).send('Group updated');
   });
 
@@ -52,6 +58,7 @@ export const GroupController = app => {
 
     await groupService.hardDelete(groupId);
 
+    attachServiceInfoToResponse(res, GroupService, groupService.hardDelete, [groupId]);
     res.status(200).send('Group deleted');
   });
 };

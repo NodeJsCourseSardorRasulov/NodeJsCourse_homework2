@@ -2,6 +2,7 @@ import { userMiddlewareValidator } from '../validation/index.js';
 import { UserService } from '../services/index.js';
 import { UserModel } from '../models/index.js';
 import { routesConfig } from '../configs/index.js';
+import { attachServiceInfoToResponse } from '../helpers/index.js';
 
 const { userRoutesPathname } = routesConfig;
 
@@ -13,6 +14,7 @@ export const UserController = app => {
 
     const users = await userService.getAll(loginSubstring, limit);
 
+    attachServiceInfoToResponse(res, UserService, userService.getAll, [loginSubstring, limit]);
     res.status(200).send(users);
   });
 
@@ -21,6 +23,7 @@ export const UserController = app => {
 
     const newUser = await userService.create(user);
 
+    attachServiceInfoToResponse(res, UserService, userService.create, [user]);
     res.status(201).send(newUser);
   });
 
@@ -30,6 +33,7 @@ export const UserController = app => {
 
     await userService.update(updatingUser, userId);
 
+    attachServiceInfoToResponse(res, UserService, userService.update, [updatingUser, userId]);
     res.status(201).send('User updated');
   });
 
@@ -38,6 +42,7 @@ export const UserController = app => {
 
     await userService.softDelete(userId);
 
+    attachServiceInfoToResponse(res, UserService, userService.softDelete, [userId]);
     res.status(200).send('User deleted');
   });
 };
