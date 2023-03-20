@@ -9,11 +9,12 @@ const loggerMiddleware = createLoggerMiddleware();
 
 const { port } = serverConnectionConfig;
 
-app.listen(port, () => {
-  console.log(`Server is launched on port ${port}`);
-});
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(loggerMiddleware);
+
+app.listen(port, () => {
+  console.log(`Server is launched on port ${port}`);
+});
 
 export default app;
