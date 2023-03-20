@@ -6,7 +6,5 @@ export const errorHandlingAndLoggingMiddleware = (err, req, res, next) => {
 
   winstonLogger.error(message);
 
-  console.log('error handliing and logging middleware', message);
-
   res.status(500).send('Internal Server Error');
 };
