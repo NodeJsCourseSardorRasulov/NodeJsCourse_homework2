@@ -1,8 +1,13 @@
 import { createLogger, transports } from 'winston';
 
+import { winstonMessageFormat, logFilenames } from '../constants/index.js';
+
+const { winstonErrorLogFilename, winstonExceptionsLogFilename, winstonRejectiosLogFilename } = logFilenames;
+
 export const winstonLogger = createLogger({
-  transports: [new transports.Console()],
-  exceptionsLogger: [new transports.File({ filename: 'exceptions.log' })],
-  rejectionHandlers: [new transports.File({ filename: 'rejections.log' })]
+  format: winstonMessageFormat,
+  transports: [new transports.File({ filename: winstonErrorLogFilename })],
+  exceptionsLogger: [new transports.File({ filename: winstonExceptionsLogFilename })],
+  rejectionHandlers: [new transports.File({ filename: winstonRejectiosLogFilename })]
 });
 
