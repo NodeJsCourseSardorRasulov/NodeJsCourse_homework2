@@ -10,8 +10,6 @@ export const LoginController = app => {
   app.post(loginRoutesPathname, async (req, res) => {
     const { username, password } = req.body;
 
-    console.log('req', req.body);
-
     const token = await userService.login(username, password);
 
     if (!token) {
