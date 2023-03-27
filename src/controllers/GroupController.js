@@ -2,7 +2,7 @@ import { groupMiddlewareValidator } from '../validation/index.js';
 import { GroupService } from '../services/index.js';
 import { GroupModel, UserModel } from '../models/index.js';
 import { routesConfig } from '../configs/index.js';
-import { groupPermMiddleware } from '../middlewares/index.js';
+import { groupPermMiddleware, authMiddleware } from '../middlewares/index.js';
 import { attachServiceInfoToResponse } from '../helpers/index.js';
 
 const { groupRoutesPathname } = routesConfig;
@@ -11,6 +11,8 @@ const groupService = new GroupService(GroupModel, UserModel);
 const groupMiddlewares = [groupMiddlewareValidator, groupPermMiddleware];
 
 export const GroupController = app => {
+  app.use(groupRoutesPathname, authMiddleware);
+
   app.get(`${groupRoutesPathname}/:limit?`, async (req, res) => {
     const { limit } = req.params || {};
 
