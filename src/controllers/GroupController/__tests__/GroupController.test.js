@@ -66,7 +66,7 @@ describe('Testing Group entity controller methods', () => {
     });
   });
 
-  it('PUT /groups/:userId', async () => {
+  it('PUT /groups/:groupId', async () => {
     const groupDataToEdit = {
       name: 'NEW_GROUP_UPDATE',
       permissions: 'WRITE'
@@ -85,7 +85,7 @@ describe('Testing Group entity controller methods', () => {
     });
   });
 
-  it('DELETE /groups/:userId', async () => {
+  it('DELETE /groups/:groupId', async () => {
     const response = await supertest(app)
       .delete(`${groupRoutesPathname}/38965d1b-d330-4433-b963-94863ef2d88f`)
       .set('Accept', 'application/json')
