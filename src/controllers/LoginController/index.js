@@ -1,6 +1,6 @@
-import { UserModel } from '../models/index.js';
-import { UserService } from '../services/index.js';
-import { routesConfig } from '../configs/index.js';
+import { UserModel } from '../../models/index.js';
+import { UserService } from '../../services/index.js';
+import { routesConfig } from '../../configs/index.js';
 
 const { loginRoutesPathname } = routesConfig;
 
