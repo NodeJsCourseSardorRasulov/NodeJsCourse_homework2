@@ -2,12 +2,14 @@ import fs from 'fs';
 import morgan from 'morgan';
 
 import { getTokensConfig, getFormatConfig } from '../helpers/index.js';
-import { logFilename, formatName } from '../constants/index.js';
+import { logFilenames, formatName } from '../constants/index.js';
 
-export const createLoggerMiddleware = () => {
+const { morganLogFilename } = logFilenames;
+
+export const createMorganLoggerMiddleware = () => {
   const tokensConfig = getTokensConfig();
   const formatConfig = getFormatConfig();
-  const writableStream = fs.createWriteStream(logFilename);
+  const writableStream = fs.createWriteStream(morganLogFilename);
 
   tokensConfig.forEach(config => {
     const [tokenName, tokenCallback] = Object.values(config);
