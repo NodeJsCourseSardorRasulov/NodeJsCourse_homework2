@@ -1,14 +1,17 @@
-import { userMiddlewareValidator } from '../validation/index.js';
-import { UserService } from '../services/index.js';
-import { UserModel } from '../models/index.js';
-import { routesConfig } from '../configs/index.js';
-import { attachServiceInfoToResponse, asyncHandler } from '../helpers/index.js';
+import { userMiddlewareValidator } from '../../validation/index.js';
+import { UserService } from '../../services/index.js';
+import { UserModel } from '../../models/index.js';
+import { routesConfig } from '../../configs/index.js';
+import { attachServiceInfoToResponse, asyncHandler } from '../../helpers/index.js';
+import { authMiddleware } from '../../middlewares/index.js';
 
 const { userRoutesPathname } = routesConfig;
 
 const userService = new UserService(UserModel);
 
 export const UserController = app => {
+  app.use(userRoutesPathname, authMiddleware);
+
   app.get(`${userRoutesPathname}/:loginSubstring?/:limit?`, asyncHandler(async (req, res) => {
     const { loginSubstring, limit } = req.params || {};
 
@@ -34,7 +37,10 @@ export const UserController = app => {
     await userService.update(updatingUser, userId);
 
     attachServiceInfoToResponse(res, UserService, userService.update, [updatingUser, userId]);
-    res.status(201).send('User updated');
+    res.status(200).send({
+      success: true,
+      message: 'User updated'
+    });
   }));
 
   app.delete(`${userRoutesPathname}/:userId`, asyncHandler(async (req, res) => {
@@ -43,6 +49,9 @@ export const UserController = app => {
     await userService.softDelete(userId);
 
     attachServiceInfoToResponse(res, UserService, userService.softDelete, [userId]);
-    res.status(200).send('User deleted');
+    res.status(200).send({
+      success: true,
+      message: 'User deleted'
+    });
   }));
 };

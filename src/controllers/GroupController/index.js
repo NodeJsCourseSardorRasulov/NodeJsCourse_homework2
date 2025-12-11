@@ -1,9 +1,9 @@
-import { groupMiddlewareValidator } from '../validation/index.js';
-import { GroupService } from '../services/index.js';
-import { GroupModel, UserModel } from '../models/index.js';
-import { routesConfig } from '../configs/index.js';
-import { groupPermMiddleware } from '../middlewares/index.js';
-import { attachServiceInfoToResponse } from '../helpers/index.js';
+import { groupMiddlewareValidator } from '../../validation/index.js';
+import { GroupService } from '../../services/index.js';
+import { GroupModel, UserModel } from '../../models/index.js';
+import { routesConfig } from '../../configs/index.js';
+import { groupPermMiddleware, authMiddleware } from '../../middlewares/index.js';
+import { attachServiceInfoToResponse } from '../../helpers/index.js';
 
 const { groupRoutesPathname } = routesConfig;
 
@@ -11,6 +11,8 @@ const groupService = new GroupService(GroupModel, UserModel);
 const groupMiddlewares = [groupMiddlewareValidator, groupPermMiddleware];
 
 export const GroupController = app => {
+  app.use(groupRoutesPathname, authMiddleware);
+
   app.get(`${groupRoutesPathname}/:limit?`, async (req, res) => {
     const { limit } = req.params || {};
 
@@ -28,9 +30,15 @@ export const GroupController = app => {
     attachServiceInfoToResponse(res, GroupService, groupService.addUsersToGroup, [groupId, userId]);
 
     if (result) {
-      res.status(200).send('User successfully added to group');
+      res.status(201).send({
+        success: true,
+        message: 'User successfully added to group'
+      });
     } else {
-      res.send('User wasn\'t added to a group');
+      res.send({
+        success: false,
+        message: 'User wasn\'t added to a group'
+      });
     }
   });
 
@@ -50,7 +58,10 @@ export const GroupController = app => {
     await groupService.update(updatingGroup, groupId);
 
     attachServiceInfoToResponse(res, GroupService, groupService.update, [updatingGroup, groupId]);
-    res.status(201).send('Group updated');
+    res.status(200).send({
+      success: true,
+      message: 'Group updated'
+    });
   });
 
   app.delete(`${groupRoutesPathname}/:groupId`, async (req, res) => {
@@ -59,6 +70,9 @@ export const GroupController = app => {
     await groupService.hardDelete(groupId);
 
     attachServiceInfoToResponse(res, GroupService, groupService.hardDelete, [groupId]);
-    res.status(200).send('Group deleted');
+    res.status(200).send({
+      success: true,
+      message: 'Group deleted'
+    });
   });
 };

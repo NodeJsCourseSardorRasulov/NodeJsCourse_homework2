@@ -1,4 +1,7 @@
 import { Op } from 'sequelize';
+import Jwt from 'jsonwebtoken';
+
+import { authSecret } from '../configs/index.js';
 
 export class UserService {
   constructor(userModel) {
@@ -56,5 +59,28 @@ export class UserService {
     });
 
     return res;
+  }
+
+  async findUser(username) {
+    const user = await this.userModel.findOne({
+      where: {
+        login: username
+      }
+    });
+
+    return user;
+  }
+
+  async login(username, password) {
+    const user = await this.findUser(username);
+
+    if (!user || user.password !== password || user.isDeleted) {
+      return false;
+    }
+
+    const payload = { username: user.login };
+    const token = Jwt.sign(payload, authSecret, { expiresIn: '10m' });
+
+    return token;
   }
 }
