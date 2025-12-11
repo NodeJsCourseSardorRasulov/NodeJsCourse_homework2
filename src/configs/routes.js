@@ -1,4 +1,5 @@
 export const routesConfig = {
   userRoutesPathname: '/users',
-  groupRoutesPathname: '/groups'
+  groupRoutesPathname: '/groups',
+  loginRoutesPathname: '/login'
 };
