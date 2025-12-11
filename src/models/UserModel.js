@@ -7,7 +7,7 @@ const modelOptions = {
   deletedAt: 'isDeleted'
 };
 
-export const UserModel = sequelize.define('user', {
+export const UserModel = sequelize.define('User', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -15,7 +15,8 @@ export const UserModel = sequelize.define('user', {
   },
   login: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   age: {
     type: DataTypes.INTEGER,

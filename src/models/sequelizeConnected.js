@@ -1,9 +1,7 @@
 import { Sequelize } from 'sequelize';
 
-import { dbConnectionConfig } from '../configs/index.js';
-
-export const sequelize = new Sequelize(dbConnectionConfig);
+export const sequelize = new Sequelize(process.env.DB_CONNECTION_URL);
 
 sequelize.authenticate()
   .then(() => console.log('Connection has been established successfully'))
-  .catch(() => console.log('Unable to connecto to databse'));
+  .catch(() => console.log('Unable to connect to database'));

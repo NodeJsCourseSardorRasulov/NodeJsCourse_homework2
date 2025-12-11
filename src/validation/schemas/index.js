@@ -1,2 +1,2 @@
 export * from './userSchema.js';
-export * from './groupSchema';
+export * from './groupSchema.js';
